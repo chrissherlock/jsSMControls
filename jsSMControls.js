@@ -51,37 +51,40 @@
 	window['SessionManager']['Logout'] = Logout;
 
 	/* Database controls functions (login, logout) 
+	
 	   NOTE: this does NOT work in Internet Explorer. The reason for this is that 
-	         Internet Explorer assumes that all string data is null terminated, whereas
-			 ECMA-262 section 8.4 merely states:
+	     Internet Explorer assumes that all string data is null terminated, whereas
+	     ECMA-262 section 8.4 merely states:
 			     
-				 "The String type is the set of all finite ordered sequences of zero or 
-				  more 16-bit unsigned integer values (?elements?). The String type is 
-				  generally used to represent textual data in a running ECMAScript program, 
-				  in which case each element in the String is treated as a code unit value 
-				  (see Clause 6). Each element is regarded as occupying a position within 
-				  the sequence. These positions are indexed with nonnegative integers. The 
-				  first element (if any) is at position 0, the next element (if any) at 
-				  position 1, and so on. The length of a String is the number of elements 
-				  (i.e., 16-bit values) within it. The empty String has length zero and 
-				  therefore contains no elements.
-				  
-				  When a String contains actual textual data, each element is considered to 
-				  be a single UTF-16 code unit. Whether or not this is the actual storage format 
-				  of a String, the characters within a String are numbered by their initial code 
-				  unit element position as though they were represented using UTF-16. All 
-				  operations on Strings (except as otherwise stated) treat them as sequences of 
-				  undifferentiated 16-bit unsigned integers; they do not ensure the resulting 
-				  String is in normalised form, nor do they ensure language-sensitive results."
+			"The String type is the set of all finite ordered sequences of zero or 
+			more 16-bit unsigned integer values (?elements?). The String type is 
+			generally used to represent textual data in a running ECMAScript program, 
+			in which case each element in the String is treated as a code unit value 
+			(see Clause 6). Each element is regarded as occupying a position within 
+			the sequence. These positions are indexed with nonnegative integers. The 
+			first element (if any) is at position 0, the next element (if any) at 
+			position 1, and so on. The length of a String is the number of elements 
+			(i.e., 16-bit values) within it. The empty String has length zero and 
+			therefore contains no elements.
+			
+			When a String contains actual textual data, each element is considered to 
+			be a single UTF-16 code unit. Whether or not this is the actual storage 
+			format of a String, the characters within a String are numbered by their 
+			initial code unit element position as though they were represented using 
+			UTF-16. All operations on Strings (except as otherwise stated) treat them 
+			as sequences of undifferentiated 16-bit unsigned integers; they do not 
+			ensure the resulting String is in normalised form, nor do they ensure 
+			language-sensitive results."
 				  
 			(see also section 4.3.16)
 			
-			There IS a hack to get around this via using some sort of CStr function and extracting 
-			the information from IE's reponsebody header, but until I can work out a clean way of 
-			resolving this code problem, IE is not supported. 
-			
-			Code patches welcome :-)
-	   */
+		There IS a hack to get around this via using some sort of CStr function and then 
+		extract the information from IE's reponsebody header, but until I can work out a 
+		clean way of resolving this code problem, IE is not supported. 
+		
+		Code patches welcome :-)
+		
+	*/
 	
 	// Setup database controls namespace
 	
