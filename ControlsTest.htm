@@ -10,7 +10,7 @@
 			$("#Login").click(function() { SessionManager.Login("ausilxh", "ausilxh"); $("#Login").attr("disabled","disable"); $("#GetRecordSet").removeAttr("disabled");});
 			/*DBControl.clearParam();
 			DBControl.AddParam("NAME", "(GMT-10:00) Hawaii");*/
-			$("#GetRecordSet").click(function() { rs = DBControl.GetRecordSet2("Select TIME_ZONE"); alert(rs); });
+			$("#GetRecordSet").click(function() { rs = DBControl.GetRecordSet("Select TIME_ZONE"); alert(rs); });
 			$("#ParseData").click(function() { DBControl.ParseData(rs); });
 			//SessionManager.Logout();
 		});
