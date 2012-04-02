@@ -224,14 +224,14 @@
 	
 	function GetRecordSet(query) {
 		// FIXME - needs the ability to add parameters
-		var getRSUrl = "/ServiceManager.aspx?GetRS&ID=" + session + "&Query=" + query; 
+		var RSURL = "/ServiceManager.aspx?GetRS&ID=" + session + "&Query=" + query; 
 		
 		$.ajaxSetup ({  
 		    cache: false  
 		}); 
 		
 		$.ajax({
-			url:fileURL,
+			url:RSURL,
 			async: false,			
 			success:function(result) {
 				data = result;
