@@ -18,7 +18,7 @@
 		}); 
 		
 		$.ajax({
-			url:"http://chris-pc/ita/ServiceManager.aspx?&TemplateName=InLogin&USER_ID=" + username + "&PASS_WORD=" + password + "&DATABASE=1", 
+			url:"/ita/ServiceManager.aspx?&TemplateName=InLogin&USER_ID=" + username + "&PASS_WORD=" + password + "&DATABASE=1", 
 			success:function(result) {
 				html = $(result);
 				session = $("#ID", html).attr("value");
@@ -41,7 +41,7 @@
 	
 	function Logout() {
 		alert(session);
-		$.post("http://chris-pc/ita/ServiceManager.aspx?BTN_EXIT=True", 
+		$.post("ServiceManager.aspx?BTN_EXIT=True", 
 			{ ID: GetSession() },
 			function(data) {
 				alert("Logged out");
@@ -224,7 +224,7 @@
 	
 	function GetRecordSet(query) {
 		// FIXME - needs the ability to add parameters
-		var RSURL = "/ServiceManager.aspx?GetRS&ID=" + session + "&Query=" + query; 
+		var RSURL = "ServiceManager.aspx?GetRS&ID=" + session + "&Query=" + query; 
 		
 		$.ajaxSetup ({  
 		    cache: false  
