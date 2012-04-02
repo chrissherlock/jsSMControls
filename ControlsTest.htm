@@ -1,0 +1,25 @@
+<html>
+	<head>
+		<script type="text/javascript" src="jquery.js"></script>
+		<script type="text/javascript" src="jdataview.js"></script>
+		<script type="text/javascript" src="jsSMControls.js"></script>
+		<script type="text/javascript"> 
+		$(document).ready(function() { 
+			var rs;
+			$("#GetRecordSet").attr("disabled","disable");
+			$("#Login").click(function() { SessionManager.Login("ausilxh", "ausilxh"); $("#Login").attr("disabled","disable"); $("#GetRecordSet").removeAttr("disabled");});
+			/*DBControl.clearParam();
+			DBControl.AddParam("NAME", "(GMT-10:00) Hawaii");*/
+			$("#GetRecordSet").click(function() { rs = DBControl.GetRecordSet2("Select TIME_ZONE"); alert(rs); });
+			$("#ParseData").click(function() { DBControl.ParseData(rs); });
+			//SessionManager.Logout();
+		});
+		</script>
+	</head>
+
+	<body>
+		<button id="Login">Login</button>
+		<button id="GetRecordSet">Get Record Set</button>
+		<button id="ParseData">Parse Record Set</button>
+	</body>
+</html>

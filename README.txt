@@ -1,0 +1,1 @@
+Implement the VSM controls in JavaScript. I'm only targeting Firefox, Chrome and Safari. No Internet Explorer as it just can't handle binary data (easily). If you want to use Internet Explorer, no probs but you'll need to install the standard ActiveX controls. 
