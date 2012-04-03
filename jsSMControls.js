@@ -19,6 +19,7 @@
 		
 		$.ajax({
 			url:"/ita/ServiceManager.aspx?&TemplateName=InLogin&USER_ID=" + username + "&PASS_WORD=" + password + "&DATABASE=1", 
+			async: false,
 			success:function(result) {
 				html = $(result);
 				session = $("#ID", html).attr("value");
@@ -30,8 +31,64 @@
 			}
 		});
 	}
-
+	
 	window['SessionManager']['Login'] = Login;
+	
+	function LoginPortal(username, password) {
+		var html;
+		
+		// turn off caching
+		$.ajaxSetup ({  
+		    cache: false,		
+		}); 
+		
+		$.ajax({
+			url:"/ita/ServiceManager.aspx?lite", 
+			async: false,
+			success:function(result) {
+				html = $(result);
+				session = $("#ID", html).attr("value");
+				if ( $("#ID").length === 0 ) { // ID value doesn't exist
+					$("body").append("<input type=\"hidden\" id=\"ID\"" + "value = \"" + session + "\">"); 
+				}
+			}
+		});
+
+		var data = new FormData();
+		data.append("USER_ID", username);
+		data.append("PASS_WORD", password);
+		data.append("TemplateName", "LITELOGIN");
+		data.append("ID", session);
+		data.append("DATABASE", 'ita');
+		data.append("BTN_OK", '');
+		
+		var loginSucceeded;
+		
+		$.ajax({
+			url:"ServiceManager.aspx?lite", 
+			data: data,
+			async: false,
+			contentType: false,
+			processData: false,
+			type: 'POST',
+			success:function(result) {
+				html = $(result);
+				sessionReturned = $("#ID", html).attr("value");
+				if ($("#USER_ID", html).length !== 0) {
+					alert("Wrong credentials!");
+					loginSucceeded=false;
+				} else {
+					alert("Session ID:" + session + "\nReturned session ID: " + sessionReturned + "\nLogged in!");
+					session = sessionReturned;
+					loginSucceeded=true;
+				}
+			}
+		});
+
+		return loginSucceeded;
+	}
+
+	window['SessionManager']['LoginPortal'] = LoginPortal;
 	
 	function GetSession() {
 		return session;
@@ -92,6 +149,7 @@
 	
 	var dbControl;
 	var data;
+	var params = [];
 	
 	function GetEnvVariables(data) {
 		var stringData = data.toString();
@@ -226,6 +284,13 @@
 		// FIXME - needs the ability to add parameters
 		var RSURL = "ServiceManager.aspx?GetRS&ID=" + session + "&Query=" + query; 
 		
+		numParams = params.length;
+		if (numParams != 0) {
+			for (paramCntr = 0; paramCntr < numParams; paramCntr++) {
+				RSURL += "&" + params[paramCntr].param + "=" + params[paramCntr].value;
+			}
+		}
+		
 		$.ajaxSetup ({  
 		    cache: false  
 		}); 
@@ -242,6 +307,18 @@
 	}
 	
 	window['DBControl']['GetRecordSet'] = GetRecordSet; 
+	
+	function AddParam(param, value) {
+		params.push({"param": param, "value": value});
+	}
+	
+	window['DBControl']['AddParam'] = AddParam;
+	
+	function ClearParam() {
+		params = [];
+	}
+	
+	window['DBControl']['ClearParam'] = ClearParam;
 	
 })();
 	

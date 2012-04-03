@@ -7,10 +7,29 @@
 		$(document).ready(function() { 
 			var rs;
 			$("#GetRecordSet").attr("disabled","disable");
-			$("#Login").click(function() { SessionManager.Login("ausilxh", "ausilxh"); $("#Login").attr("disabled","disable"); $("#GetRecordSet").removeAttr("disabled");});
-			/*DBControl.clearParam();
-			DBControl.AddParam("NAME", "(GMT-10:00) Hawaii");*/
-			$("#GetRecordSet").click(function() { rs = DBControl.GetRecordSet("Select TIME_ZONE"); alert(rs); });
+			$("#ParseData").attr("disabled","disable");
+			
+			$("#Login").click(function() { 
+				var loginSucceeded = SessionManager.LoginPortal($('#USER_ID').val(), $('#PASSWORD').val()); 
+				$("#Login").attr("disabled","disable"); 
+				if (loginSucceeded) {
+					$("#GetRecordSet").removeAttr("disabled");
+					$("#ParseData").removeAttr("disabled","disable");
+					$("#Login").attr("disabled","disable");
+				} else
+				{
+					$("#GetRecordSet").attr("disabled","disable");
+					$("#ParseData").attr("disabled","disable");
+					$("#Login").removeAttr("disabled","disable");
+				}
+				
+			});
+			$("#GetRecordSet").click(function() { 
+				DBControl.ClearParam();
+				DBControl.AddParam("NAME", "(GMT-10:00) Hawaii");
+				rs = DBControl.GetRecordSet("Select TIME_ZONE"); 
+				alert(rs); 
+			});
 			$("#ParseData").click(function() { DBControl.ParseData(rs); });
 			//SessionManager.Logout();
 		});
@@ -18,8 +37,15 @@
 	</head>
 
 	<body>
+		Username: <input type="text" id="USER_ID"/><br/>
+		Password: <input type="text" id="PASSWORD"/><br/>
 		<button id="Login">Login</button>
+
+		<p>
+
 		<button id="GetRecordSet">Get Record Set</button>
 		<button id="ParseData">Parse Record Set</button>
+
+
 	</body>
 </html>
