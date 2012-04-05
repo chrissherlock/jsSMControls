@@ -6,6 +6,8 @@
 		<script type="text/javascript"> 
 		$(document).ready(function() { 
 			var rs;
+			var DB = new DBControl();
+			
 			$("#GetRecordSet").attr("disabled","disable");
 			$("#ParseData").attr("disabled","disable");
 			
@@ -25,12 +27,12 @@
 				
 			});
 			$("#GetRecordSet").click(function() { 
-				DBControl.ClearParam();
-				DBControl.AddParam("NAME", "(GMT-10:00) Hawaii");
-				rs = DBControl.GetRecordSet("Select TIME_ZONE"); 
+				DB.ClearParam();
+				DB.AddParam("NAME", "(GMT-10:00) Hawaii");
+				rs = DB.GetRecordSet("Select TIME_ZONE"); 
 				alert(rs); 
 			});
-			$("#ParseData").click(function() { DBControl.ParseData(rs); });
+			$("#ParseData").click(function() { DB.ParseData(rs); });
 			//SessionManager.Logout();
 		});
 		</script>

@@ -144,11 +144,11 @@
 		
 	*/
 	
-	// Setup database controls namespace
+	// Setup database controls
 	
-	window['DBControl'] = {};
+	var DBControl = function () {};
+	window['DBControl'] = DBControl;
 	
-	var dbControl;
 	var data;
 	var params = [];
 	
@@ -274,14 +274,12 @@
 		});
 	}
 	
-	function ParseData(data) {		
+	DBControl.prototype.ParseData = function (data) {		
 		var index = GetEnvVariables(data);
 		GetPayloadData(data, index);		
 	}
 	
-	window['DBControl']['ParseData'] = ParseData;
-	
-	function GetRecordSet(query) {
+	DBControl.prototype.GetRecordSet = function (query) {
 		// FIXME - needs the ability to add parameters
 		var RSURL = "ServiceManager.aspx?GetRS&ID=" + session + "&Query=" + query; 
 		
@@ -307,19 +305,13 @@
 		return data;
 	}
 	
-	window['DBControl']['GetRecordSet'] = GetRecordSet; 
-	
-	function AddParam(param, value) {
+	DBControl.prototype.AddParam = function (param, value) {
 		params.push({"param": param, "value": value});
 	}
 	
-	window['DBControl']['AddParam'] = AddParam;
-	
-	function ClearParam() {
+	DBControl.prototype.ClearParam = function () {
 		params = [];
 	}
-	
-	window['DBControl']['ClearParam'] = ClearParam;
 	
 })();
 	
