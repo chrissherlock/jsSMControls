@@ -7,6 +7,7 @@
 	
 	// private variables
 	var session;
+	var system = 'vsm'
 	
 	// Public functions
 	function Login(username, password) {
@@ -18,7 +19,7 @@
 		}); 
 		
 		$.ajax({
-			url:"/ita/ServiceManager.aspx?&TemplateName=InLogin&USER_ID=" + username + "&PASS_WORD=" + password + "&DATABASE=1", 
+			url:"ServiceManager.aspx?&TemplateName=InLogin&USER_ID=" + username + "&PASS_WORD=" + password + "&DATABASE=1", 
 			async: false,
 			success:function(result) {
 				html = $(result);
@@ -43,7 +44,7 @@
 		}); 
 		
 		$.ajax({
-			url:"/ita/ServiceManager.aspx?lite", 
+			url:"ServiceManager.aspx?lite", 
 			async: false,
 			success:function(result) {
 				html = $(result);
@@ -59,7 +60,7 @@
 		data.append("PASS_WORD", password);
 		data.append("TemplateName", "LITELOGIN");
 		data.append("ID", session);
-		data.append("DATABASE", 'ita');
+		data.append("DATABASE", system);
 		data.append("BTN_OK", '');
 		
 		var loginSucceeded;
@@ -231,14 +232,15 @@
 		var curPos = index;
 		
 		var fieldMarker;
+		
+		var columns = [];
+		
 		var colHdrLen;
 		var colHdrType;
 		var colHdrIsNull;
 		var colHdrName;
 
 		var isHeader=true;
-		
-		var dbgAlert;
 		
 		var stringData = data.toString();
 		var view = new jDataView(stringData);
@@ -251,26 +253,25 @@
 			}
 			
 			curPos += 1;
-			dbgAlert = "Field marker: " + fieldMarker;
 			
 			colHdrLen = view.getUint32(curPos, true);
 			curPos += 5;		
-			dbgAlert += "\nColumn name length: " + colHdrLen;
 			
 			colHdrType = view.getUint32(curPos, false);
 			curPos += 4;
-			dbgAlert += "\nColumn type: " + colHdrType;
 			
 			colHdrIsNull = view.getUint8(curPos);
 			curPos += 1;
-			dbgAlert += "\nColumn is null?: " + colHdrIsNull;
 			
 			colHdrName = view.getString(colHdrLen, curPos);
 			curPos += colHdrLen;
-			dbgAlert += "\nColumn name:" + colHdrName; 
 			
-			alert(dbgAlert);
+			columns.push({ "name" : colHdrName, "type" : colHdrType, "length" : colHdrLen, "isNull" : colHdrIsNull });
 		}
+		
+		$.each(columns, function(index, value) {
+			alert('Column name: ' + columns[index].name + '\nColumn type: ' + columns[index].type + '\nColumn length: ' + columns[index].length);
+		});
 	}
 	
 	function ParseData(data) {		
