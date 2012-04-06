@@ -105,7 +105,7 @@
 	
 	function Logout() {
 		$.post("ServiceManager.aspx?BTN_EXIT=True", 
-			{ ID: GetSession() });
+			{ ID: GetSession(), TemplateName: "INNAVIGATION" });
 	}
 	
 	window['SessionManager']['Logout'] = Logout;
