@@ -24,11 +24,9 @@
 			success:function(result) {
 				html = $(result);
 				session = $("#ID", html).attr("value");
-				//alert(session);
 				if ( $("#ID").length === 0 ) { // ID value doesn't exist
 					$("body").append("<input type=\"hidden\" id=\"ID\"" + "value = \"" + session + "\">"); 
 				}
-				//alert("Logged in!");
 			}
 		});
 	}
@@ -154,7 +152,6 @@
 	
 	function GetEnvVariables(data) {
 		var stringData = data.toString();
-		alert(data.length);
 		var view = new jDataView(stringData);
 		// 8 characters for INFRA_DT and 6 characters for the number of fields
 		// (trim the end spaces)
@@ -188,14 +185,13 @@
 					fieldValue = view.getString(fieldValueLen, index);
 					index += fieldValueLen;
 					
-					//alert(fieldName + " (string) value is: " + fieldValue);
 					break;
 				
 				case 'I':
 					fieldValueLen = parseInt(view.getString(6, index));
 					index += 6;
 					
-					var datetimeRe = new RegExp("^~DT~.*");
+					var datetimeRe = new RegExp("^~DT~.*"); 
 					var floatingRe = new RegExp("[-+]?[0-9]*\.?[0-9]+");
 					var booleanRe = new RegExp("(False|True)");
 					
@@ -203,12 +199,10 @@
 					
 					if (datetimeRe.exec(rawValue)) {
 						fieldValue = rawValue;
-						index += fieldValueLen;
-						//alert(fieldName + " (datetime) value is: " + fieldValue);						
+						index += fieldValueLen;			
 					} else if (floatingRe.exec(rawValue)) {
 						fieldValue = parseFloat($.trim(rawValue));
 						index += fieldValueLen;
-						//alert(fieldName + " (float) value is: " + fieldValue);
 					} else {					
 						if (booleanRe.exec(rawValue)) { // boolean value?
 							fieldValue = rawValue;
@@ -217,7 +211,6 @@
 							fieldValue = parseInt($.trim(rawValue));
 							index += fieldValueLen;
 						}
-						//alert(fieldName + " (integer) value is: " + fieldValue);
 					}
 					break;
 			}
