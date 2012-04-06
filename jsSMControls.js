@@ -12,6 +12,7 @@
 	// Public functions
 	function Login(username, password) {
 		var html;
+		var loginSucceeded;
 		
 		// turn off caching
 		$.ajaxSetup ({  
@@ -27,8 +28,16 @@
 				if ( $("#ID").length === 0 ) { // ID value doesn't exist
 					$("body").append("<input type=\"hidden\" id=\"ID\"" + "value = \"" + session + "\">"); 
 				}
+				
+				if (session) {
+					loginSucceeded=true;
+				} else {
+					loginSucceeded=false;
+				}
 			}
 		});
+		
+		return loginSucceeded;
 	}
 	
 	window['SessionManager']['Login'] = Login;
@@ -272,11 +281,20 @@
 		}
 		
 		// actual data
-		while (curPos <= data.length) {
+		while (curPos < data.length) {
 			var colIdx;
 			var value;
 			var len;
+			var recordDelimiter;
+			var endOfData;
 			
+			recordDelimiter = view.getString(1, curPos);
+			endOfData = view.getInt32(curPos, true);
+			if (recordDelimiter !== 'R') {
+				if (endOfData === 0) { 		// end of data is 0. Really... I know how big the data is in bytes, WHY does it need this?!?
+					break;
+				}
+			}
 			curPos += 1; // "R" delimiter
 			
 			for (colIdx = 0; colIdx < columns.length; colIdx++) {
