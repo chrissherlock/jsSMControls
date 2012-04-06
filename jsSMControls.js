@@ -77,7 +77,6 @@
 					alert("Wrong credentials!");
 					loginSucceeded=false;
 				} else {
-					alert("Session ID:" + session + "\nReturned session ID: " + sessionReturned + "\nLogged in!");
 					session = sessionReturned;
 					loginSucceeded=true;
 				}
@@ -96,12 +95,8 @@
 	window['SessionManager']['GetSession'] = GetSession;
 	
 	function Logout() {
-		alert(session);
 		$.post("ServiceManager.aspx?BTN_EXIT=True", 
-			{ ID: GetSession() },
-			function(data) {
-				alert("Logged out");
-			});
+			{ ID: GetSession() });
 	}
 	
 	window['SessionManager']['Logout'] = Logout;
