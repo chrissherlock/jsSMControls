@@ -145,12 +145,24 @@
 	// Setup database controls
 	
 	var DBControl = function () {};
-	window['DBControl'] = DBControl;
 	
 	var data;
 	var params = [];
 	
+	var dataTypeEnum = {
+		Binary : 8,
+		Boolean: 7,
+		DateTime: 6,
+		String: 5,
+		Double: 4,
+		Int64: 3,
+		Int32: 2,
+		Int16: 1,
+		Unknown: 0
+	}
+	
 	function GetEnvVariables(data) {
+		// FIXME - needs a try/catch
 		var stringData = data.toString();
 		var view = new jDataView(stringData);
 		// 8 characters for INFRA_DT and 6 characters for the number of fields
@@ -227,6 +239,8 @@
 		var fieldMarker;
 		
 		var columns = [];
+		var row = [];
+		var rows = [];
 		
 		var colHdrLen;
 		var colHdrType;
@@ -262,9 +276,71 @@
 			columns.push({ "name" : colHdrName, "type" : colHdrType, "length" : colHdrLen, "isNull" : colHdrIsNull });
 		}
 		
-		$.each(columns, function(index, value) {
-			alert('Column name: ' + columns[index].name + '\nColumn type: ' + columns[index].type + '\nColumn length: ' + columns[index].length);
-		});
+		// actual data
+		while (curPos <= data.length) {
+			var colIdx;
+			var value;
+			var len;
+			
+			curPos += 1; // "R" delimiter
+			
+			for (colIdx = 0; colIdx < columns.length; colIdx++) {
+				switch (columns[colIdx].type) {  
+					case dataTypeEnum.Int16:
+						len = view.getInt32(curPos, true);
+						curPos += 4;
+						value = view.getInt16(curPos, true);
+						curPos += 2;
+						break;
+					case dataTypeEnum.Int32:
+						len = view.getInt32(curPos, true);
+						curPos += 4;
+						value = view.getInt32(curPos, true);
+						curPos += 4;
+						break;
+					case dataTypeEnum.Int64:
+						len = view.getInt32(curPos, true);
+						curPos += 4;
+						value = view.getInt64(curPos, true);
+						curPos += 8;
+						break;
+					case dataTypeEnum.Double:
+						len = view.getInt32(curPos, true);
+						curPos += 4;
+						value = view.getFloat64(curPos, true);
+						curPos += 8;
+						break;
+					case dataTypeEnum.String:
+						len = view.getInt32(curPos, true);
+						curPos += 4;
+						value = view.getString(len, curPos);
+						curPos += len;
+						break;
+					case dataTypeEnum.DateTime:
+						len = view.getInt32(curPos, true);
+						curPos += 4;
+						value = view.getFloat64(curPos, true);
+						curPos += 8;
+						break;
+					case dataTypeEnum.Boolean:
+						len = view.getInt32(curPos, true);
+						curPos += 4;
+						value = view.getUint8(curPos);
+						curPos += 1;
+						break;
+					case dataTypeEnum.Binary:
+						len = view.getInt32(curPos, true);
+						curPos += 4;
+						value = view.getString(len, curPos);
+						curPos += len;
+						break;
+				}
+				
+				row.push( {"name": columns[colIdx].name, "value": value } );
+			}
+			rows.push(row);
+			row = [];
+		}
 	}
 	
 	DBControl.prototype.ParseData = function (data) {		
@@ -273,7 +349,6 @@
 	}
 	
 	DBControl.prototype.GetRecordSet = function (query) {
-		// FIXME - needs the ability to add parameters
 		var RSURL = "ServiceManager.aspx?GetRS&ID=" + session + "&Query=" + query; 
 		
 		numParams = params.length;
@@ -299,12 +374,45 @@
 	}
 	
 	DBControl.prototype.AddParam = function (param, value) {
-		params.push({"param": param, "value": value});
+		var exists = false;
+		var numParams = params.length;
+		
+		if (numParams != 0) {
+			for (paramCntr = 0; paramCntr < numParams; paramCntr++) {
+				if (params[paramCntr].name === param) {
+					exists = true;
+					break;
+				}
+			}
+		}
+		
+		if (!exists) {
+			params.push({"param": param, "value": value});
+		}
+	}
+	
+	DBControl.prototype.RemoveParam = function (param) {
+		var numParams = params.length;
+		
+		if (numParams != 0) {
+			for (paramCntr = 0; paramCntr < numParams; paramCntr++) {
+				if (params[paramCntr].name === param) {
+					// splice removes the element from the array
+					// we then break as AddParam guarantees that the param
+					// will only be in the array once
+					params.splice(paramCntr, 1);
+					break; 
+				}
+			}
+		}
 	}
 	
 	DBControl.prototype.ClearParam = function () {
 		params = [];
 	}
+	
+	// export to global object
+	window['DBControl'] = DBControl;
 	
 })();
 	
