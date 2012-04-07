@@ -1,14 +1,13 @@
 $(document).ready(function() { 
-	var sm = new SessionManager();
-	var DB = new DBControl();
 	var rs;
+	var DB = new DBControl();
 	
 	$("#GetRecordSet").attr("disabled","disable");
 	$("#ParseData").attr("disabled","disable");
 	$("#Logout").attr("disabled","disable");
 	
 	$("#Login").click(function() { 
-		var loginSucceeded = sm.Login($('#USER_ID').val(), $('#PASSWORD').val()); 
+		var loginSucceeded = SessionManager.Login($('#USER_ID').val(), $('#PASSWORD').val()); 
 		$("#Login").attr("disabled","disable"); 
 		if (loginSucceeded) {
 			$("#GetRecordSet").removeAttr("disabled");
@@ -36,6 +35,6 @@ $(document).ready(function() {
 		$("#ParseData").attr("disabled","disable");
 		$("#Logout").attr("disabled","disable");
 		$("#Login").removeAttr("disabled","disable");
-		sm.Logout(); 
+		SessionManager.Logout(); 
 	});
 });
