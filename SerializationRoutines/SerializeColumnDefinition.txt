@@ -1,0 +1,25 @@
+public static void SerialiseColumnDefinition(IQueryResultColumn Column, BinaryWriter OutputWriter, ITraceStream TraceStream)
+{
+    QueryResultDataType type = Column.Type;
+    byte[] bytes = Encoding.UTF8.GetBytes(Column.Name);
+    OutputWriter.Write(Convert.ToByte('F'));
+    OutputWriter.Write(bytes.Length);
+    if (type == QueryResultDataType.TypeString)
+    {
+        OutputWriter.Write(Column.Length);
+    }
+    else
+    {
+        OutputWriter.Write(0);
+    }
+    OutputWriter.Write((byte) type);
+    OutputWriter.Write(Convert.ToByte(Column.AllowNull));
+    if (bytes.Length > 0)
+    {
+        OutputWriter.Write(bytes);
+    }
+}
+
+ 
+
+ 

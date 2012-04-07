@@ -1,0 +1,87 @@
+public static void LoadFromString(this IFieldCollection Target, string Data)
+{
+    try
+    {
+        Target.Clear();
+        int index = 0;
+        int length = Data.Length;
+        if (length > 0)
+        {
+            Read(Data, ref index, 6);
+        }
+        while (index < length)
+        {
+            int num4;
+            string str3;
+            int num3 = Convert.ToInt32(Read(Data, ref index, 6).Trim());
+            string key = Read(Data, ref index, num3);
+            string str2 = Read(Data, ref index, 1);
+            if (str2 == "I")
+            {
+                str3 = Read(Data, ref index, 6).Trim();
+            }
+            else
+            {
+                str3 = Read(Data, ref index, 8).Trim();
+            }
+            if (str2 == "I")
+            {
+                num4 = Convert.ToInt32(str3);
+            }
+            else
+            {
+                num4 = Convert.ToInt32(str3, 0x10);
+            }
+            string data = Read(Data, ref index, num4);
+            if (str2.CompareTo("C") == 0)
+            {
+                FieldCollection target = new FieldCollection();
+                target.LoadFromString(data);
+                Target.Add(key, target);
+            }
+            else
+            {
+                double d = -1.0;
+                if (((str2.CompareTo("I") == 0) || (str2.CompareTo("J") == 0)) && (((data.Length > "~DT~".Length) && (data.IndexOf(',') == -1)) && data.StartsWith("~DT~")))
+                {
+                    try
+                    {
+                        d = double.Parse(data.Substring("~DT~".Length), NeutralNumericFormat.Value);
+                    }
+                    catch (Exception exception1)
+                    {
+                        ProjectData.SetProjectError(exception1);
+                        d = -1.0;
+                        ProjectData.ClearProjectError();
+                    }
+                }
+                switch (d)
+                {
+                    case -1.0:
+                    {
+                        Target.Add(key, data);
+                        continue;
+                    }
+                    case 0.0:
+                    {
+                        Target.Add(key, new DateTime(0x85103c0cb83c000L));
+                        continue;
+                    }
+                }
+                Target.Add(key, DateTime.FromOADate(d));
+            }
+        }
+    }
+    catch (Exception exception2)
+    {
+        ProjectData.SetProjectError(exception2);
+        Exception ex = exception2;
+        Settings.Tracing.WriteError("FieldCollectionSerialization.LoadFromString", ex, ex.Message, new string[0]);
+        ThrowFieldCollectionFormatException(ex);
+        ProjectData.ClearProjectError();
+    }
+}
+
+ 
+
+ 

@@ -1,0 +1,27 @@
+public static void SerialiseQueryResults(IQueryResults Results, Stream OutputStream, ITraceStream TraceStream)
+{
+    using (BinaryWriter writer = new BinaryWriter(OutputStream))
+    {
+        IEnumerable<IQueryResultColumn> columns = Results.GetColumns();
+        foreach (IQueryResultColumn column in columns)
+        {
+            SerialiseColumnDefinition(column, writer, TraceStream);
+        }
+        while (Results.Read())
+        {
+            writer.Write(Convert.ToByte('R'));
+            int columnIndex = 0;
+            foreach (IQueryResultColumn column2 in columns)
+            {
+                SerialiseColumnValue(column2, Results, writer, TraceStream, columnIndex);
+                columnIndex++;
+            }
+        }
+        if (columns.Count<IQueryResultColumn>() > 0)
+        {
+            writer.Write(0);
+        }
+    }
+}
+
+ 

@@ -1,0 +1,13 @@
+public enum QueryResultDataType : byte
+{
+    TypeBinary = 8,
+    TypeBoolean = 7,
+    TypeDateTime = 6,
+    TypeDouble = 4,
+    TypeInt16 = 1,
+    TypeInt32 = 2,
+    TypeInt64 = 3,
+    TypeString = 5,
+    TypeUnknown = 0
+}
+
