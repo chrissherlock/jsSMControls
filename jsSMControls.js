@@ -1,16 +1,13 @@
-(function() {
+var SessionManager = function() {
 	
 	/* Session Management functions (login, logout) */
-	
-	// Setup session manager namespace
-	window['SessionManager'] = {};
 	
 	// private variables
 	var session;
 	var system = 'vsm'
 	
 	// Public functions
-	function Login(username, password) {
+	Login: function (username, password) {
 		var html;
 		var loginSucceeded;
 		
@@ -40,9 +37,7 @@
 		return loginSucceeded;
 	}
 	
-	window['SessionManager']['Login'] = Login;
-	
-	function LoginPortal(username, password) {
+	LoginPortal: function (username, password) {
 		var html;
 		
 		// turn off caching
@@ -95,21 +90,19 @@
 		return loginSucceeded;
 	}
 
-	window['SessionManager']['LoginPortal'] = LoginPortal;
 	
-	function GetSession() {
+	GetSession: function () {
 		return session;
 	}
 	
-	window['SessionManager']['GetSession'] = GetSession;
-	
-	function Logout() {
+	Logout: function () {
 		$.post("ServiceManager.aspx?BTN_EXIT=True", 
 			{ ID: GetSession(), TemplateName: "INNAVIGATION" });
 	}
-	
-	window['SessionManager']['Logout'] = Logout;
 
+}
+
+var DBControl = function () {
 	/* Database controls functions (login, logout) 
 	
 	   NOTE: this does NOT work in Internet Explorer. The reason for this is that 
@@ -146,10 +139,74 @@
 		
 	*/
 	
-	// Setup database controls
+	ParseData: function (data) {		
+		var index = GetEnvVariables(data);
+		GetPayloadData(data, index);		
+	}
 	
-	var DBControl = function () {};
+	GetRecordSet: function (query) {
+		var RSURL = "ServiceManager.aspx?GetRS&ID=" + session + "&Query=" + query; 
+		
+		numParams = params.length;
+		if (numParams != 0) {
+			for (paramCntr = 0; paramCntr < numParams; paramCntr++) {
+				RSURL += "&" + params[paramCntr].param + "=" + params[paramCntr].value;
+			}
+		}
+		
+		$.ajaxSetup ({  
+		    cache: false  
+		}); 
+		
+		$.ajax({
+			url:RSURL,
+			async: false,			
+			success:function(result) {
+				data = result;
+			}
+		});		
+		
+		return data;
+	}
 	
+	AddParam: function (param, value) {
+		var exists = false;
+		var numParams = params.length;
+		
+		if (numParams != 0) {
+			for (paramCntr = 0; paramCntr < numParams; paramCntr++) {
+				if (params[paramCntr].name === param) {
+					exists = true;
+					break;
+				}
+			}
+		}
+		
+		if (!exists) {
+			params.push({"param": param, "value": value});
+		}
+	}
+	
+	RemoveParam: function (param) {
+		var numParams = params.length;
+		
+		if (numParams != 0) {
+			for (paramCntr = 0; paramCntr < numParams; paramCntr++) {
+				if (params[paramCntr].name === param) {
+					// splice removes the element from the array
+					// we then break as AddParam guarantees that the param
+					// will only be in the array once
+					params.splice(paramCntr, 1);
+					break; 
+				}
+			}
+		}
+	}
+	
+	ClearParam: function () {
+		params = [];
+	}
+
 	var data;
 	var params = [];
 	
@@ -355,79 +412,7 @@
 			row = [];
 		}
 	}
-	
-	DBControl.prototype.ParseData = function (data) {		
-		var index = GetEnvVariables(data);
-		GetPayloadData(data, index);		
-	}
-	
-	DBControl.prototype.GetRecordSet = function (query) {
-		var RSURL = "ServiceManager.aspx?GetRS&ID=" + session + "&Query=" + query; 
-		
-		numParams = params.length;
-		if (numParams != 0) {
-			for (paramCntr = 0; paramCntr < numParams; paramCntr++) {
-				RSURL += "&" + params[paramCntr].param + "=" + params[paramCntr].value;
-			}
-		}
-		
-		$.ajaxSetup ({  
-		    cache: false  
-		}); 
-		
-		$.ajax({
-			url:RSURL,
-			async: false,			
-			success:function(result) {
-				data = result;
-			}
-		});		
-		
-		return data;
-	}
-	
-	DBControl.prototype.AddParam = function (param, value) {
-		var exists = false;
-		var numParams = params.length;
-		
-		if (numParams != 0) {
-			for (paramCntr = 0; paramCntr < numParams; paramCntr++) {
-				if (params[paramCntr].name === param) {
-					exists = true;
-					break;
-				}
-			}
-		}
-		
-		if (!exists) {
-			params.push({"param": param, "value": value});
-		}
-	}
-	
-	DBControl.prototype.RemoveParam = function (param) {
-		var numParams = params.length;
-		
-		if (numParams != 0) {
-			for (paramCntr = 0; paramCntr < numParams; paramCntr++) {
-				if (params[paramCntr].name === param) {
-					// splice removes the element from the array
-					// we then break as AddParam guarantees that the param
-					// will only be in the array once
-					params.splice(paramCntr, 1);
-					break; 
-				}
-			}
-		}
-	}
-	
-	DBControl.prototype.ClearParam = function () {
-		params = [];
-	}
-	
-	// export to global object
-	window['DBControl'] = DBControl;
-	
-})();
+}
 	
 
 
