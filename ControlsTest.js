@@ -12,6 +12,7 @@ $(document).ready(function() {
 			$("#GetRecordSet").removeAttr("disabled");
 			$("#Logout").removeAttr("disabled","disable");
 			$("#Login").attr("disabled","disable");
+			alert("Logged in");
 		} else
 		{
 			$("#GetRecordSet").attr("disabled","disable");
