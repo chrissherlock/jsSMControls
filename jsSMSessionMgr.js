@@ -18,13 +18,16 @@
 				success:function(result) {
 					html = $(result);
 					session = $("#ID", html).attr("value");
-					if ( $("#ID").length === 0 ) { // ID value doesn't exist
+					if ( $("#ID").length === 0 ) { // ID value doesn't exist on page, so add it to the DOM
+						console.log("Appending session to the DOM. Session ID is " + session);
 						$("body").append("<input type=\"hidden\" id=\"ID\"" + "value = \"" + session + "\">"); 
 					}
 					
 					if (session) {
+						console.log("Logged on - session ID is " + session + ".");
 						loginSucceeded=true;
 					} else {
+						console.log("Wrong credentials!");
 						loginSucceeded=false;
 					}
 				}
@@ -48,6 +51,7 @@
 					html = $(result);
 					session = $("#ID", html).attr("value");
 					if ( $("#ID").length === 0 ) { // ID value doesn't exist
+						console.log("Logged on - session ID is " + session + ".");
 						$("body").append("<input type=\"hidden\" id=\"ID\"" + "value = \"" + session + "\">"); 
 					}
 				}
@@ -74,10 +78,11 @@
 					html = $(result);
 					sessionReturned = $("#ID", html).attr("value");
 					if ($("#USER_ID", html).length !== 0) {
-						alert("Wrong credentials!");
+						console.log("Wrong credentials!");
 						loginSucceeded=false;
 					} else {
 						session = sessionReturned;
+						console.log("Logged on - session ID is " + session + ".");
 						loginSucceeded=true;
 					}
 				}
@@ -88,7 +93,8 @@
 		
 		this.Logout = function () {
 			$.post("ServiceManager.aspx?BTN_EXIT=True", 
-				{ ID: GetSession(), TemplateName: "INNAVIGATION" });
+				{ ID: GetSession(), TemplateName: "INNAVIGATION" },
+				function() { console.log("Successfully logged out"); });
 		}
 	};
 })();

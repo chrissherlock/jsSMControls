@@ -42,6 +42,8 @@
 	this.DBControl = function () {
 		// privileged interface
 		
+		data = '';
+		
 		this.getRecordSet = function (query) {
 			var RSURL = "ServiceManager.aspx?GetRS&ID=" + session + "&Query=" + query; 
 			
@@ -75,12 +77,14 @@
 				for (paramCntr = 0; paramCntr < numParams; paramCntr++) {
 					if (params[paramCntr].name === param) {
 						exists = true;
+						console.log("[" + param + "] already exists, exiting");
 						break;
 					}
 				}
 			}
 			
 			if (!exists) {
+				console.log("Added " + param + ".");
 				params.push({"param": param, "value": value});
 			}
 		}
@@ -95,6 +99,7 @@
 						// we then break as AddParam guarantees that the param
 						// will only be in the array once
 						params.splice(paramCntr, 1);
+						console.log("Removed " + param + ".");
 						break; 
 					}
 				}
@@ -102,6 +107,7 @@
 		}
 		
 		this.clearParam = function () {
+			console.log("Cleared parameters");
 			params = [];
 		}	
 
@@ -311,6 +317,7 @@
 				}
 				rows.push(row);
 				row = [];
+				console.log("Retrieved data:\n" + rows);
 			}
 		}	
 
