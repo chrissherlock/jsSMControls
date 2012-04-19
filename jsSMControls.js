@@ -42,10 +42,12 @@
 	this.DBControl = function () {
 		// privileged interface
 		
-		data = '';
+		
 		
 		this.getRecordSet = function (query) {
 			var RSURL = "ServiceManager.aspx?GetRS&ID=" + session + "&Query=" + query; 
+			
+			data = ''; // clear the data
 			
 			numParams = params.length;
 			if (numParams != 0) {
