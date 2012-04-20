@@ -106,7 +106,7 @@
 		
 		this.Logout = function () {
 			$.post("ServiceManager.aspx?BTN_EXIT=True", 
-				{ ID: GetSession(), TemplateName: "INNAVIGATION" },
+				{ ID: session, TemplateName: "INNAVIGATION" },
 				function() { 
 					if (debugging===true) {
 						console.log("Successfully logged out"); 
