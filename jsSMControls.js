@@ -320,8 +320,10 @@
 					row.push( {"name": columns[colIdx].name, "value": value } );
 				}
 				rows.push(row);
+				for (var colIdx = 0; colIdx < row.length; colIdx++) {
+					console.log("Column: " + row[colIdx].name + "\nValue: " + row[colIdx].value);
+				}
 				row = [];
-				console.log("Retrieved data:\n" + rows);
 			}
 		}	
 
