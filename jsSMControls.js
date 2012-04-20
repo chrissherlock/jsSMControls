@@ -48,6 +48,8 @@
 			var RSURL = "ServiceManager.aspx?GetRS&ID=" + session + "&Query=" + query; 
 			
 			data = ''; // clear the data
+			rows= [];
+			columns = [];
 			
 			numParams = params.length;
 			if (numParams != 0) {
