@@ -2,6 +2,7 @@
 	
 	// global variables
 	system = 'vsm';
+	var debugging = true;
 
 	/* Database controls functions (login, logout) 
 	
@@ -81,14 +82,18 @@
 				for (paramCntr = 0; paramCntr < numParams; paramCntr++) {
 					if (params[paramCntr].name === param) {
 						exists = true;
-						console.log("[" + param + "] already exists, exiting");
+						if (debugging===true) {
+							console.log("[" + param + "] already exists, exiting");
+						}
 						break;
 					}
 				}
 			}
 			
 			if (!exists) {
-				console.log("Added " + param + ".");
+				if (debugging===true) {
+					console.log("Added " + param + ".");
+				}
 				params.push({"param": param, "value": value});
 			}
 		}
@@ -103,7 +108,9 @@
 						// we then break as AddParam guarantees that the param
 						// will only be in the array once
 						params.splice(paramCntr, 1);
-						console.log("Removed " + param + ".");
+						if (debugging===true) {
+							console.log("Removed " + param + ".");
+						}
 						break; 
 					}
 				}
@@ -111,7 +118,9 @@
 		}
 		
 		this.clearParam = function () {
-			console.log("Cleared parameters");
+			if (debugging===true) {
+				console.log("Cleared parameters");
+			}
 			params = [];
 		}	
 
@@ -321,7 +330,9 @@
 				}
 				rows.push(row);
 				for (var colIdx = 0; colIdx < row.length; colIdx++) {
-					console.log("Column: " + row[colIdx].name + "\nValue: " + row[colIdx].value);
+					if (debugging===true) {
+						console.log("Column: " + row[colIdx].name + "\nValue: " + row[colIdx].value);
+					}
 				}
 				row = [];
 			}
